@@ -1,10 +1,12 @@
 import React, { FunctionComponent } from "react";
 
 import { line } from "d3-shape";
+import type { link } from "phylotree";
+import { AlignTipsType } from "./PhylogeneticTree";
 
 export interface IBranchProps {
-  key: any;
-  link: any;
+  key: string;
+  link: link;
   xScale: any;
   yScale: any;
   colorScale: any;
@@ -12,14 +14,14 @@ export interface IBranchProps {
   isShowBranchLength: boolean;
   width: number;
   maxLabelWidth: number;
-  alignTips: string;
+  alignTips: AlignTipsType;
   branchStyler: any;
-  labelStyler: any;
+  labelStyler: ((name: string) => any) | null;
   branchStyle?: any;
   labelStyle?: any;
   tooltip?: any;
-  setTooltip?: any;
-  onBranchClick?: any;
+  setTooltip?: (tooltip: any) => void;
+  onBranchClick: (d: any) => void;
   supportValue: any;
   isCollapsed?: boolean;
   isLeaf: boolean;
@@ -51,7 +53,6 @@ const Branch: FunctionComponent<IBranchProps> = (props) => {
     isCollapsed = false,
     isLeaf,
   } = props;
-
   const { source, target } = link;
 
   const temp_name_array = target.data.name.split("/");
@@ -87,10 +88,10 @@ const Branch: FunctionComponent<IBranchProps> = (props) => {
   const computed_branch_styles = branchStyler
     ? branchStyler(target.data)
     : target.data.annotation && colorScale
-    ? {
+      ? {
         stroke: colorScale(target.data.annotation),
       }
-    : {};
+      : {};
 
   const all_branch_styles = Object.assign(
     {},
@@ -116,19 +117,19 @@ const Branch: FunctionComponent<IBranchProps> = (props) => {
         onMouseMove={
           tooltip
             ? (e) => {
-                setTooltip({
-                  x: e.nativeEvent.offsetX,
-                  y: e.nativeEvent.offsetY,
-                  data: target.data,
-                });
-              }
+              setTooltip!({
+                x: e.nativeEvent.offsetX,
+                y: e.nativeEvent.offsetY,
+                data: target.data,
+              });
+            }
             : undefined
         }
         onMouseOut={
           tooltip
             ? (e) => {
-                setTooltip(false);
-              }
+              setTooltip!(false);
+            }
             : undefined
         }
         onClick={(e) => {

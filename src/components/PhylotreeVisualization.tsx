@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import PhylogeneticTree from "./PhylogeneticTree";
+import PhylogeneticTree, { AlignTipsType, SortType } from "./PhylogeneticTree";
 
 import FileSaver from "file-saver";
 import saveSvgAsPng from "save-svg-as-png";
@@ -275,6 +275,8 @@ export interface IPhylotreeVisualizationProps {
   defaultWidth?: number;
 }
 
+
+
 export const PhylotreeVisualization: FunctionComponent<
   IPhylotreeVisualizationProps
 > = (props) => {
@@ -292,8 +294,8 @@ export const PhylotreeVisualization: FunctionComponent<
   const [minWidth, setMinWidth] = useState<number>(500);
   const [height, setHeight] = useState<number>(500);
   const [minHeight, setMinHeight] = useState<number>(500);
-  const [sort, setSort] = useState<string | null>(null);
-  const [alignTips, setAlignTips] = useState<string>("left");
+  const [sort, setSort] = useState<SortType>(null);
+  const [alignTips, setAlignTips] = useState<AlignTipsType>("left");
   const [isShowInternalNode, setIsShowInternalNode] = useState<boolean>(false);
   const [isShowScale, setIsShowScale] = useState<boolean>(false);
   const [isShowLabel, setIsShowLabel] = useState<boolean>(true);
@@ -306,8 +308,8 @@ export const PhylotreeVisualization: FunctionComponent<
     newickString: "",
     supportValue: null,
     nodeNum: 0,
-    sort: null,
-    alignTips: "left",
+    sort: null as SortType,
+    alignTips: "left" as AlignTipsType,
     isShowInternalNode: false,
     isShowLabel: true,
     isShowBranchLength: false,
@@ -431,6 +433,7 @@ export const PhylotreeVisualization: FunctionComponent<
   return (
     <div className="pv-container">
       <div className="tool-group">
+
         <div className="tool-group-upper">
           <ButtonGroup style={{ display: "flex" }}>
             <Reload onClick={() => setBaseStates()} />
@@ -467,7 +470,8 @@ export const PhylotreeVisualization: FunctionComponent<
             <SaveNewickButton onClick={() => handleExportNewick()} />
             <DownloadImageButton onClick={() => handleDownloadImage()} />
           </ButtonGroup>
-
+        </div>
+        <div className="tool-group-middle">
           <ShowInternalLabel
             isShowInternalNode={isShowInternalNode}
             setIsShowInternalNode={setIsShowInternalNode}
@@ -483,7 +487,6 @@ export const PhylotreeVisualization: FunctionComponent<
             setSearchingLabel={setSearchingLabel}
           />
         </div>
-
         <ShowSupportValue
           supportValue={supportValue}
           setSupportValue={setSupportValue}

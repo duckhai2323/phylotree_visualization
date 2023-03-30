@@ -1,6 +1,6 @@
 {
-  "name": "phylotree-visualization-demo",
-  "version": "1.2.5",
+  "name": "@aqaurius6666/phylotree-visualization",
+  "version": "1.2.6",
   "private": false,
   "description": "A library used for visualizing phylotree.",
   "main": "dist/index.js",
@@ -13,24 +13,26 @@
     "build": "npm run clean && tsc && npm run copy-files",
     "clean": "rimraf dist",
     "copy-files": "copyfiles -u 3 -E **/styles/**.png dist/components/styles && copyfiles -u 3 -E **/styles/**.css dist/components/styles",
-    "prepare": "npm run build"
+    "prerelease": "npm run build"
   },
   "author": "nktd",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^17.0.23",
-    "@types/react": "^17.0.39",
-    "@types/react-dom": "^17.0.11",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "@types/react": "^17.0.39 || ^18.0.0",
+    "@types/react-dom": "^17.0.11 || ^18.0.0",
+    "react": "^17.0.2 || ^18.0.0",
+    "react-dom": "^17.0.2 || ^18.0.0",
     "react-scripts": "^5.0.1",
+    "rimraf": "^4.4.0",
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^17 || ^18",
+    "react-dom": "^17 || ^18"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/bootstrap": "^5.1.13",

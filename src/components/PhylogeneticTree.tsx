@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-
-import { phylotree } from "phylotree";
+import { node, phylotree } from "phylotree";
 
 import { max } from "d3-array";
 import { scaleLinear, scaleOrdinal } from "d3-scale";
@@ -17,34 +16,34 @@ import SVG from "./svg";
 
 import DropdownsMenu, { IDropdownsMenuProps } from "./DropdownsMenu";
 
-function accessor(node: any): number {
+function accessor(node: node): number {
   return +node.data.attribute;
 }
 
-function x_branch_lengths(node: any): number {
+function x_branch_lengths(node: node): number {
   if (!node.parent) return 0;
 
   const tmp = accessor(node);
 
-  return tmp + node.parent.data.abstract_x;
+  return tmp + node.parent.data.abstract_x!;
 }
 
-function x_no_branch_lengths(node: any): number {
-  return node.parent ? node.parent.data.abstract_x + 1 : 0;
+function x_no_branch_lengths(node: node): number {
+  return node.parent ? node.parent.data.abstract_x! + 1 : 0;
 }
 
-function text_width(text: any, size: any, max_width: any): number {
+function text_width(text: string, size: number, max_width: number): number {
   const width = Math.min(max_width, text.length);
   return width * size * 0.60009765625;
 }
 
-function sort_nodes(tree: any, direction: any): void {
-  tree.traverse_and_compute(function (n: any) {
+function sort_nodes(tree: phylotree, direction: "ascending" | "descending"): void {
+  tree.traverse_and_compute(function (n) {
     let d = 1;
 
     if (n.children && n.children.length) {
       d += Number(
-        max(n.children, function (d: any) {
+        max(n.children, function (d) {
           return d["count_depth"];
         })
       );
@@ -55,12 +54,12 @@ function sort_nodes(tree: any, direction: any): void {
 
   const asc = direction == "ascending";
 
-  tree.resortChildren(function (a: any, b: any) {
+  tree.resortChildren(function (a, b) {
     return (a["count_depth"] - b["count_depth"]) * (asc ? 1 : -1);
   });
 }
 
-function isInCollapsedList(haystack: any, needle: any) {
+function isInCollapsedList(haystack: any[], needle: any) {
   for (const item of haystack) {
     if (item.data.name === needle.data.name) {
       return true;
@@ -70,7 +69,7 @@ function isInCollapsedList(haystack: any, needle: any) {
   return false;
 }
 
-function collapsedNodeInList(tree: any, collapsedList: any, node: any) {
+function collapsedNodeInList(tree: phylotree, collapsedList: any[], node: node) {
   node.collapsed = isInCollapsedList(collapsedList, node);
 
   if (node.data.name !== "root") {
@@ -78,17 +77,17 @@ function collapsedNodeInList(tree: any, collapsedList: any, node: any) {
   } else node.hidden = node.collapsed;
 
   if (!tree.isLeafNode(node)) {
-    node.children.forEach((tmp: any) => {
+    node.children.forEach((tmp) => {
       collapsedNodeInList(tree, collapsedList, tmp);
     });
   }
 }
 
 function placenodes(
-  tree: any,
+  tree: phylotree,
   isShowInternalNode: boolean | undefined,
-  sort: any,
-  collapsedList: any
+  sort: "ascending" | "descending" | null,
+  collapsedList: any[]
 ): void {
   if (tree.nodes.data.name === "new_root") return;
 
@@ -110,7 +109,7 @@ function placenodes(
     ? x_branch_lengths
     : x_no_branch_lengths;
 
-  function node_layout(node: any): any {
+  function node_layout(node: node): any {
     if (!node.unique_id) {
       unique_id = node.unique_id = unique_id + 1;
     }
@@ -130,7 +129,7 @@ function placenodes(
     return node.data.abstract_y;
   }
 
-  function internal_node_layout(node: any): void {
+  function internal_node_layout(node: node): void {
     unique_id = node.unique_id = unique_id + 1;
 
     node.data.abstract_x = x_branch_length(node);
@@ -175,8 +174,8 @@ function placenodes(
 
     root.data.abstract_y =
       root.children
-        .map((child: any) => child.data.abstract_y)
-        .reduce((a: any, b: any) => a + b, 0) / root.children.length;
+        .map((child) => child.data.abstract_y!)
+        .reduce((a, b) => a + b, 0) / root.children.length;
   } else {
     node_layout(tree.nodes);
 
@@ -184,32 +183,34 @@ function placenodes(
   }
 }
 
-function getColorScale(tree: any, highlightBranches: boolean | undefined) {
+function getColorScale(tree: phylotree, highlightBranches: boolean | undefined) {
   if (!highlightBranches) return null;
 
   return tree.parsed_tags && highlightBranches
     ? scaleOrdinal().domain(tree.parsed_tags).range(schemeCategory10)
     : null;
 }
+export type AlignTipsType = "left" | "right" | undefined;
 
+export type SortType = "ascending" | "descending" | null;
 export interface IPhylogeneticTreeProps {
   newickString: string;
-  setNewickString: any;
-  width?: number;
-  height?: number;
-  padding?: number;
-  isShowInternalNode?: boolean;
-  sort?: string | null;
+  setNewickString: (newickString: string) => void;
+  width: number | undefined;
+  height: number | undefined;
+  padding: number | undefined;
+  isShowInternalNode: boolean | undefined;
+  sort: SortType;
   maxLabelWidth?: number;
   highlightBranches?: boolean | any;
-  isShowLabel?: boolean;
-  isShowBranchLength?: boolean;
-  alignTips?: string;
-  branchStyler?: any;
-  labelStyler?: any;
+  isShowLabel: boolean | undefined;
+  isShowBranchLength: boolean | undefined;
+  alignTips: AlignTipsType;
+  branchStyler?: any | undefined;
+  labelStyler?: (nodeName: string) => any;
   tooltip?: any;
-  supportValue: any;
-  isShowScale?: boolean;
+  supportValue: any | null;
+  isShowScale: boolean | undefined;
 }
 
 const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
@@ -235,9 +236,9 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
     isShowScale = false,
   } = props;
 
-  const [tree, setTree] = useState<any>(new phylotree(newickString));
+  const [tree, setTree] = useState<phylotree>(new phylotree(newickString));
   const [tooltip, setTooltip] = useState(false);
-  const [collapsedList, setCollapsedList] = useState([]);
+  const [collapsedList, setCollapsedList] = useState<node[]>([]);
   const [dropdownsMenuState, setDropdownsMenuState] =
     useState<IDropdownsMenuProps | null>(null);
   const dropdownsMenuContainer = useRef<HTMLDivElement>(null);
@@ -251,7 +252,7 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
     setDropdownsMenuState(null);
   };
 
-  const viewSubtree = (node: any) => {
+  const viewSubtree = (node: node) => {
     let posS = newickString.search(node.data.name);
     let posE = newickString.search(node.data.name);
 
@@ -281,7 +282,7 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
     setDropdownsMenuState(null);
   };
 
-  const toggleHighlightBranch = (node: any) => {
+  const toggleHighlightBranch = (node: node) => {
     let pos = newickString.search(node.data.name);
 
     pos += node.data.name.length;
@@ -302,12 +303,12 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
     setDropdownsMenuState(null);
   };
 
-  const toggleCollapse = (node: any) => {
-    let newCollapsedList: any;
+  const toggleCollapse = (node: node) => {
+    let newCollapsedList: node[] = [];
 
     if (isInCollapsedList(collapsedList, node)) {
       newCollapsedList = collapsedList.filter(
-        (element: any) => element.data.name !== node.data.name
+        (element) => element.data.name !== node.data.name
       );
     } else {
       newCollapsedList = collapsedList;
@@ -331,6 +332,7 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
 
   // Update
   useEffect(() => {
+
     setDropdownsMenuState(null);
 
     window.addEventListener("mousedown", handleClickOutsidedropdownsMenu);
@@ -347,10 +349,9 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
   // Operation
 
   if (!tree && !newickString) return <div />;
-
   placenodes(tree, isShowInternalNode, sort, collapsedList);
 
-  function attachTextWidth(node: any): void {
+  function attachTextWidth(node: node): void {
     node.data.text_width = text_width(node.data.name, 14, maxLabelWidth);
 
     if (node.children) node.children.forEach(attachTextWidth);
@@ -360,7 +361,7 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
 
   const sorted_tips = tree
     .getTips()
-    .sort((a: any, b: any) => b.data.abstract_x - a.data.abstract_x);
+    .sort((a, b) => b.data.abstract_x! - a.data.abstract_x!);
 
   let rightmost = width;
 
@@ -369,17 +370,17 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
 
     rightmost = width - tip.data.text_width;
 
-    let scale = rightmost / tip.data.abstract_x;
+    let scale = rightmost / tip.data.abstract_x!;
 
     let none_cross = sorted_tips
-      .map((tip: any) => {
-        const tip_x = tip.data.abstract_x * scale,
+      .map((tip) => {
+        const tip_x = tip.data.abstract_x! * scale,
           text_x = width - tip.data.text_width,
           this_doesnt_cross = Math.floor(tip_x) < Math.ceil(text_x);
 
         return this_doesnt_cross;
       })
-      .every((x: any) => x);
+      .every((x) => x);
 
     if (none_cross) break;
   }
@@ -394,7 +395,7 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
 
   return (
     <div>
-      <TransformWrapper minScale={1} maxScale={200}>
+      <TransformWrapper minScale={0.5} maxScale={200}>
         <TransformComponent>
           <SVG
             id="svg-phylotree"
@@ -408,7 +409,7 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
                 </g>
               ) : null}
               <g transform={`translate(0, ${isShowScale ? 60 : 0})`}>
-                {tree.links.map((link: any) => {
+                {tree.links.map((link) => {
                   const source_id = link.source.unique_id;
                   const target_id = link.target.unique_id;
                   const key = source_id + "," + target_id;
@@ -442,6 +443,7 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
                   );
                 })}
                 {tooltip ? (
+                  // @ts-ignore
                   <props.tooltip width={width} height={height} {...tooltip} />
                 ) : null}
               </g>
@@ -451,6 +453,7 @@ const PhylogeneticTree: React.FunctionComponent<IPhylogeneticTreeProps> = (
       </TransformWrapper>
       <div ref={dropdownsMenuContainer}>
         {dropdownsMenuState ? (
+
           <DropdownsMenu
             left={dropdownsMenuState.left}
             top={dropdownsMenuState.top}

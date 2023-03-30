@@ -11,11 +11,19 @@
 
 .tool-group {
   margin: 20px;
+  width: 100%;
 }
+
+.tool-group-middle {
+  display: flex;
+  margin-top: 10px;
+}
+
 
 .tool-group-upper {
   display: flex;
   justify-content: space-between;
+  align-self: ;
 }
 
 .tool-group-lower {
@@ -34,7 +42,7 @@
 }
 
 .toggle-checkbox {
-  margin: auto 30px;
+  margin: auto;
 }
 
 .label-searching-form-input {
