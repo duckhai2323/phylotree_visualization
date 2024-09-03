@@ -1,12 +1,13 @@
 {
-  "name": "@aqaurius6666/phylotree-visualization",
-  "version": "1.2.6",
+  "name": "@khaitd0340/phylotree-visualization",
+  "version": "1.2.8",
   "private": false,
   "description": "A library used for visualizing phylotree.",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "file": [
-    "/dist"
+    "/dist",
+    "/src"
   ],
   "scripts": {
     "start": "react-scripts start",
