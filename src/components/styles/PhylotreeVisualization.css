@@ -2,28 +2,28 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 20px;
-}
-
-.label-searching-form {
-  display: inline-block;
+  padding: 15px 50px;
+  gap: 20px;
 }
 
 .tool-group {
-  margin: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
 }
 
-.tool-group-middle {
+.tool-group-search {
   display: flex;
+  flex-direction: row;
+  gap: 30px;
   margin-top: 10px;
 }
 
-
-.tool-group-upper {
+.tool-group-custom-tree {
   display: flex;
   justify-content: space-between;
-  align-self: ;
 }
 
 .tool-group-lower {
@@ -41,11 +41,120 @@
   display: flex;
 }
 
+/*custom checkbox*/
+
 .toggle-checkbox {
-  margin: auto;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #18353e;
+  font-weight: 500;
+}
+
+.toggle-checkbox input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+}
+
+.toggle-checkbox .checkmark {
+  position: relative;
+  height: 18px;
+  width: 18px;
+  border: 1px solid #18353e;
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.toggle-checkbox input[type='checkbox']:checked ~ .checkmark {
+  background-color: #18353e;
+}
+
+.toggle-checkbox .checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.toggle-checkbox input[type='checkbox']:checked ~ .checkmark:after {
+  display: block;
+}
+
+.toggle-checkbox .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/*custom checkbox*/
+
+.label-searching-form-div {
+  border: 1px solid #e7e7e7;
+  padding: 0px 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.label-searching-form-div:focus-within {
+  border: 1px solid #18353e;
 }
 
 .label-searching-form-input {
+  width: 25vw;
   height: 40px;
-  text-align: center;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #18353e;
+}
+
+.label-searching-form-input:focus {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 400;
+  color: #18353e;
+}
+
+.btn-custom-tree {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px !important;
+  background: #18353e !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-custom-tree-horizontal {
+  width: 45px;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px !important;
+  background: #18353e !important;
+}
+
+.btn-custom-tree-vertical {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px !important;
+  background: #18353e !important;
 }

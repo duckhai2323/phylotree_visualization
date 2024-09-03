@@ -1,17 +1,17 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useState, useEffect } from 'react';
 
-import "./styles/PhylotreeVisualization.css";
+import './styles/PhylotreeVisualization.css';
 
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import "bootstrap/dist/css/bootstrap.min.css";
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import PhylogeneticTree, { AlignTipsType, SortType } from "./PhylogeneticTree";
+import PhylogeneticTree, { AlignTipsType, SortType } from './PhylogeneticTree';
 
-import FileSaver from "file-saver";
-import saveSvgAsPng from "save-svg-as-png";
+import FileSaver from 'file-saver';
+import saveSvgAsPng from 'save-svg-as-png';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
   faRedo,
@@ -24,14 +24,15 @@ import {
   faAlignLeft,
   faImage,
   faFileExport,
-} from "@fortawesome/free-solid-svg-icons";
+  faMagnifyingGlass,
+} from '@fortawesome/free-solid-svg-icons';
 
-import displayTaxaNameButtonImage from "./styles/display_taxa_name_button.png";
-import displayBranchLengthButtonImage from "./styles/display_branch_length_button.png";
+import displayTaxaNameButtonImage from './styles/display_taxa_name_button.png';
+import displayBranchLengthButtonImage from './styles/display_branch_length_button.png';
 
 function Reload(props: any) {
   return (
-    <Button title="Reload tree" variant="secondary" {...props}>
+    <Button title='Reload tree' className='btn-custom-tree' variant='secondary' {...props}>
       <FontAwesomeIcon key={1} icon={faRedo} />
     </Button>
   );
@@ -40,9 +41,10 @@ function Reload(props: any) {
 function HorizontalExpansionButton(props: any) {
   return (
     <Button
-      variant="secondary"
+      className='btn-custom-tree-horizontal'
+      variant='secondary'
       style={{ fontSize: 10 }}
-      title="Expand horizontally"
+      title='Expand horizontally'
       {...props}
     >
       <FontAwesomeIcon key={1} icon={faArrowLeft} />
@@ -54,9 +56,10 @@ function HorizontalExpansionButton(props: any) {
 function HorizontalCompressionButton(props: any) {
   return (
     <Button
-      variant="secondary"
+      className='btn-custom-tree-horizontal'
+      variant='secondary'
       style={{ fontSize: 10 }}
-      title="Compress horizontally"
+      title='Compress horizontally'
       {...props}
     >
       <FontAwesomeIcon key={1} icon={faArrowRight} />
@@ -68,9 +71,10 @@ function HorizontalCompressionButton(props: any) {
 function VerticalExpansionButton(props: any) {
   return (
     <Button
-      variant="secondary"
-      style={{ fontSize: 10, display: "flex", flexDirection: "column" }}
-      title="Expand vertically"
+      className='btn-custom-tree-vertical'
+      variant='secondary'
+      style={{ fontSize: 10, display: 'flex', flexDirection: 'column' }}
+      title='Expand vertically'
       {...props}
     >
       <FontAwesomeIcon key={1} icon={faArrowUp} />
@@ -82,9 +86,10 @@ function VerticalExpansionButton(props: any) {
 function VerticalCompressionButton(props: any) {
   return (
     <Button
-      variant="secondary"
-      style={{ fontSize: 10, display: "flex", flexDirection: "column" }}
-      title="Compress vertically"
+      className='btn-custom-tree-vertical'
+      variant='secondary'
+      style={{ fontSize: 10, display: 'flex', flexDirection: 'column' }}
+      title='Compress vertically'
       {...props}
     >
       <FontAwesomeIcon key={1} icon={faArrowDown} />
@@ -95,15 +100,15 @@ function VerticalCompressionButton(props: any) {
 
 function AscendingSortButton(props: any) {
   return (
-    <Button variant="secondary" title="Sort in ascending order" {...props}>
-      <FontAwesomeIcon key={1} icon={faSortAmountUp} flip="vertical" />
+    <Button className='btn-custom-tree' variant='secondary' title='Sort in ascending order' {...props}>
+      <FontAwesomeIcon key={1} icon={faSortAmountUp} flip='vertical' />
     </Button>
   );
 }
 
 function DescendingSortButton(props: any) {
   return (
-    <Button variant="secondary" title="Sort in descending order" {...props}>
+    <Button className='btn-custom-tree' variant='secondary' title='Sort in descending order' {...props}>
       <FontAwesomeIcon key={1} icon={faSortAmountUp} />
     </Button>
   );
@@ -111,7 +116,7 @@ function DescendingSortButton(props: any) {
 
 function AlignTipsRightButton(props: any) {
   return (
-    <Button variant="secondary" title="Align tips to right" {...props}>
+    <Button className='btn-custom-tree' variant='secondary' title='Align tips to right' {...props}>
       <FontAwesomeIcon key={1} icon={faAlignRight} />
     </Button>
   );
@@ -119,7 +124,7 @@ function AlignTipsRightButton(props: any) {
 
 function AlignTipsLeftButton(props: any) {
   return (
-    <Button variant="secondary" title="Align tips to left" {...props}>
+    <Button className='btn-custom-tree' variant='secondary' title='Align tips to left' {...props}>
       <FontAwesomeIcon key={1} icon={faAlignLeft} />
     </Button>
   );
@@ -127,40 +132,32 @@ function AlignTipsLeftButton(props: any) {
 
 function ToggleDisplayTaxaName(props: any) {
   return (
-    <Button
-      title="Toggle the display of taxa names"
-      variant="secondary"
-      {...props}
-    >
-      <img src={displayTaxaNameButtonImage} width="20" />
+    <Button className='btn-custom-tree' title='Toggle the display of taxa names' variant='secondary' {...props}>
+      <img src={displayTaxaNameButtonImage} width='20' />
     </Button>
   );
 }
 
 function ToggleDisplayBranchLength(props: any) {
   return (
-    <Button
-      title="Toggle the display of branch lengths"
-      variant="secondary"
-      {...props}
-    >
-      <img src={displayBranchLengthButtonImage} width="20" />
+    <Button className='btn-custom-tree' title='Toggle the display of branch lengths' variant='secondary' {...props}>
+      <img src={displayBranchLengthButtonImage} width='20' />
     </Button>
   );
 }
 
 function SaveNewickButton(props: any) {
   return (
-    <Button title="Export to Newick" variant="secondary" {...props}>
-      <FontAwesomeIcon key={1} icon={faFileExport} flip="vertical" />
+    <Button className='btn-custom-tree' title='Export to Newick' variant='secondary' {...props}>
+      <FontAwesomeIcon key={1} icon={faFileExport} flip='vertical' />
     </Button>
   );
 }
 
 function DownloadImageButton(props: any) {
   return (
-    <Button title="Save image" variant="secondary" {...props}>
-      <FontAwesomeIcon key={1} icon={faImage} flip="vertical" />
+    <Button className='btn-custom-tree' title='Save image' variant='secondary' {...props}>
+      <FontAwesomeIcon key={1} icon={faImage} flip='vertical' />
     </Button>
   );
 }
@@ -173,59 +170,45 @@ function ShowInternalLabel({
   setIsShowInternalNode: any;
 }) {
   return (
-    <div className="toggle-checkbox">
+    <label className='toggle-checkbox'>
       <input
-        type="checkbox"
+        type='checkbox'
         onChange={(e) => setIsShowInternalNode(!isShowInternalNode)}
         checked={isShowInternalNode}
       />
-      {!isShowInternalNode ? " Hide" : " Show"} internal labels
-    </div>
+      <span className='checkmark'></span>
+      {!isShowInternalNode ? ' Hide' : ' Show'} internal labels
+    </label>
   );
 }
 
-function ShowScale({
-  isShowScale,
-  setIsShowScale,
-}: {
-  isShowScale: boolean;
-  setIsShowScale: any;
-}) {
+function ShowScale({ isShowScale, setIsShowScale }: { isShowScale: boolean; setIsShowScale: any }) {
   return (
-    <div className="toggle-checkbox">
-      <input
-        type="checkbox"
-        onChange={(e) => setIsShowScale(!isShowScale)}
-        checked={isShowScale}
-      />
-      {!isShowScale ? " Hide" : " Show"} scale bar
-    </div>
+    <label className='toggle-checkbox'>
+      <input type='checkbox' onChange={(e) => setIsShowScale(!isShowScale)} checked={isShowScale} />
+      <span className='checkmark'></span>
+      {!isShowScale ? ' Hide' : ' Show'} scale bar
+    </label>
   );
 }
 
-function ShowSearchLabel({
-  searchingLabel,
-  setSearchingLabel,
-}: {
-  searchingLabel: string;
-  setSearchingLabel: any;
-}) {
+function ShowSearchLabel({ searchingLabel, setSearchingLabel }: { searchingLabel: string; setSearchingLabel: any }) {
   return (
-    <form
-      className="label-searching-form"
-      onSubmit={(event) => event.preventDefault()}
-    >
-      <input
-        className="label-searching-form-input form-control"
-        type="text"
-        name="find node"
-        placeholder="Search tree"
-        value={searchingLabel}
-        onChange={(event) => {
-          setSearchingLabel(event.target.value);
-        }}
-      />
-    </form>
+    <div className='label-searching-form-div'>
+      <form className='label-searching-form' onSubmit={(event) => event.preventDefault()}>
+        <input
+          className='label-searching-form-input'
+          type='text'
+          name='find node'
+          placeholder='Search tree'
+          value={searchingLabel}
+          onChange={(event) => {
+            setSearchingLabel(event.target.value);
+          }}
+        />
+      </form>
+      <FontAwesomeIcon icon={faMagnifyingGlass} color={'#919191'} />
+    </div>
   );
 }
 
@@ -239,12 +222,12 @@ function ShowSupportValue({
   if (!supportValue) return null;
 
   return (
-    <div className="tool-group-lower">
+    <div className='tool-group-lower'>
       {supportValue.map((spValue: any) => {
         return (
-          <div className="spValChecker" key={"spVLnum " + spValue.index}>
+          <div className='spValChecker' key={'spVLnum ' + spValue.index}>
             <input
-              type="checkbox"
+              type='checkbox'
               onChange={() => {
                 let tmpSPVL = [...supportValue];
 
@@ -258,8 +241,8 @@ function ShowSupportValue({
               }}
               checked={spValue.isShowing}
             />
-            <div className="spValLabel">
-              {spValue.isShowing ? "Hide " : "Show "}
+            <div className='spValLabel'>
+              {spValue.isShowing ? 'Hide ' : 'Show '}
               {spValue.supportValue}
             </div>
           </div>
@@ -275,11 +258,7 @@ export interface IPhylotreeVisualizationProps {
   defaultWidth?: number;
 }
 
-
-
-export const PhylotreeVisualization: FunctionComponent<
-  IPhylotreeVisualizationProps
-> = (props) => {
+export const PhylotreeVisualization: FunctionComponent<IPhylotreeVisualizationProps> = (props) => {
   const { supportValueInput = null, defaultWidth = null } = props;
 
   const padding = 20;
@@ -295,27 +274,27 @@ export const PhylotreeVisualization: FunctionComponent<
   const [height, setHeight] = useState<number>(500);
   const [minHeight, setMinHeight] = useState<number>(500);
   const [sort, setSort] = useState<SortType>(null);
-  const [alignTips, setAlignTips] = useState<AlignTipsType>("left");
+  const [alignTips, setAlignTips] = useState<AlignTipsType>('left');
   const [isShowInternalNode, setIsShowInternalNode] = useState<boolean>(false);
   const [isShowScale, setIsShowScale] = useState<boolean>(false);
   const [isShowLabel, setIsShowLabel] = useState<boolean>(true);
   const [isShowBranchLength, setIsShowBranchLength] = useState<boolean>(false);
   const [reloadState, setReloadState] = useState<boolean>(false);
-  const [searchingLabel, setSearchingLabel] = useState<string>("");
+  const [searchingLabel, setSearchingLabel] = useState<string>('');
 
   // Base states
   const baseStates = {
-    newickString: "",
+    newickString: '',
     supportValue: null,
     nodeNum: 0,
     sort: null as SortType,
-    alignTips: "left" as AlignTipsType,
+    alignTips: 'left' as AlignTipsType,
     isShowInternalNode: false,
     isShowLabel: true,
     isShowBranchLength: false,
     isShowScale: false,
     reloadState: true,
-    searchingLabel: "",
+    searchingLabel: '',
   };
 
   const setBaseStates = () => {
@@ -337,38 +316,38 @@ export const PhylotreeVisualization: FunctionComponent<
     if (!newickString) return;
 
     let pattern = /\/+[0-9]+:/g;
-    let tmpResult = newickString.replace(pattern, ":");
+    let tmpResult = newickString.replace(pattern, ':');
 
-    let result = tmpResult.replace("{highlight}", "");
+    let result = tmpResult.replace('{highlight}', '');
 
     var blob = new Blob([result], {
-      type: "text/plain;charset=utf-8",
+      type: 'text/plain;charset=utf-8',
     });
 
-    FileSaver.saveAs(blob, "newick.treefile");
+    FileSaver.saveAs(blob, 'newick.treefile');
   };
 
   const imageOptions = {
     scale: 5,
     encoderOptions: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   };
 
   const handleDownloadImage = () => {
-    const tempSourceElement = document.getElementById("svg-phylotree");
+    const tempSourceElement = document.getElementById('svg-phylotree');
 
     if (tempSourceElement === null) return;
 
-    saveSvgAsPng.saveSvgAsPng(tempSourceElement, "shapes.png", imageOptions);
+    saveSvgAsPng.saveSvgAsPng(tempSourceElement, 'shapes.png', imageOptions);
   };
 
   const labelStyler = (nodeName: any) => {
-    if (searchingLabel !== "") {
-      var rx = new RegExp(searchingLabel, "i");
+    if (searchingLabel !== '') {
+      var rx = new RegExp(searchingLabel, 'i');
 
       const identifier = nodeName.search(rx);
 
-      const fill = identifier !== -1 ? "red" : "black";
+      const fill = identifier !== -1 ? 'red' : 'black';
 
       return { fill };
     }
@@ -380,23 +359,23 @@ export const PhylotreeVisualization: FunctionComponent<
   }, [props.input, supportValueInput]);
 
   useEffect(() => {
-    let tmp_newick = props.input.split("");
+    let tmp_newick = props.input.split('');
 
-    let result_array = props.input.split("");
+    let result_array = props.input.split('');
 
     let id = 0;
 
     for (let i = 0; i < result_array.length; i++) {
-      if (result_array[i] === ":") {
-        tmp_newick.splice(i + id, 0, "/", id.toString());
+      if (result_array[i] === ':') {
+        tmp_newick.splice(i + id, 0, '/', id.toString());
         id += 2;
       }
     }
 
-    const result_newick = tmp_newick.join("");
+    const result_newick = tmp_newick.join('');
 
     if (supportValueInput) {
-      const tempSPVLArray = supportValueInput.split("/");
+      const tempSPVLArray = supportValueInput.split('/');
 
       let resArray = new Array();
       let tmpCNT = 0;
@@ -431,32 +410,35 @@ export const PhylotreeVisualization: FunctionComponent<
 
   // Render
   return (
-    <div className="pv-container">
-      <div className="tool-group">
+    <div className='pv-container'>
+      <div className='tool-group'>
+        <div className='tool-group-search'>
+          <ShowSearchLabel searchingLabel={searchingLabel} setSearchingLabel={setSearchingLabel} />
 
-        <div className="tool-group-upper">
-          <ButtonGroup style={{ display: "flex" }}>
+          <ShowInternalLabel isShowInternalNode={isShowInternalNode} setIsShowInternalNode={setIsShowInternalNode} />
+
+          <ShowScale isShowScale={isShowScale} setIsShowScale={setIsShowScale} />
+        </div>
+
+        <div className='tool-group-custom-tree'>
+          <ButtonGroup
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '10px',
+            }}
+          >
             <Reload onClick={() => setBaseStates()} />
-            <HorizontalExpansionButton
-              onClick={() => setWidth(Math.max(width + widthPerNode, minWidth))}
-            />
-            <HorizontalCompressionButton
-              onClick={() => setWidth(Math.max(width - widthPerNode, minWidth))}
-            />
-            <VerticalExpansionButton
-              onClick={() =>
-                setHeight(Math.max(height + widthPerNode, minHeight))
-              }
-            />
-            <VerticalCompressionButton
-              onClick={() =>
-                setHeight(Math.max(height - widthPerNode, minHeight))
-              }
-            />
-            <AscendingSortButton onClick={() => setSort("ascending")} />
-            <DescendingSortButton onClick={() => setSort("descending")} />
-            <AlignTipsLeftButton onClick={() => setAlignTips("left")} />
-            <AlignTipsRightButton onClick={() => setAlignTips("right")} />
+            <HorizontalExpansionButton onClick={() => setWidth(Math.max(width + widthPerNode, minWidth))} />
+            <HorizontalCompressionButton onClick={() => setWidth(Math.max(width - widthPerNode, minWidth))} />
+            <VerticalExpansionButton onClick={() => setHeight(Math.max(height + widthPerNode, minHeight))} />
+            <VerticalCompressionButton onClick={() => setHeight(Math.max(height - widthPerNode, minHeight))} />
+            <AscendingSortButton onClick={() => setSort('ascending')} />
+            <DescendingSortButton onClick={() => setSort('descending')} />
+            <AlignTipsLeftButton onClick={() => setAlignTips('left')} />
+            <AlignTipsRightButton onClick={() => setAlignTips('right')} />
             <ToggleDisplayTaxaName
               onClick={() => {
                 setIsShowLabel(!isShowLabel);
@@ -471,26 +453,8 @@ export const PhylotreeVisualization: FunctionComponent<
             <DownloadImageButton onClick={() => handleDownloadImage()} />
           </ButtonGroup>
         </div>
-        <div className="tool-group-middle">
-          <ShowInternalLabel
-            isShowInternalNode={isShowInternalNode}
-            setIsShowInternalNode={setIsShowInternalNode}
-          />
 
-          <ShowScale
-            isShowScale={isShowScale}
-            setIsShowScale={setIsShowScale}
-          />
-
-          <ShowSearchLabel
-            searchingLabel={searchingLabel}
-            setSearchingLabel={setSearchingLabel}
-          />
-        </div>
-        <ShowSupportValue
-          supportValue={supportValue}
-          setSupportValue={setSupportValue}
-        />
+        <ShowSupportValue supportValue={supportValue} setSupportValue={setSupportValue} />
       </div>
       {newickString ? (
         <PhylogeneticTree
